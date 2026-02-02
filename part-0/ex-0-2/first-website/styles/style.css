@@ -1,0 +1,48 @@
+html {
+  font-size: 10px;
+  font-family: "Roboto", sans-serif;
+  background-color: #6999c6;
+}
+
+body {
+  width: 600px;
+  margin: 0 auto;
+  background-color: #d4cfc7;
+  padding: 0 20px 20px 20px;
+  border: 15px solid #332525;
+}
+
+h1 {
+  margin: 0 auto;
+  padding: 20px 0;
+  color: #0e4679;
+  text-align: center;
+  text-shadow: 25px 18px 1px #bd2d2d;
+  font-size: 42px;
+  letter-spacing: 3px;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+p,
+li {
+  font-size: 16px;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+p {
+  color: #59327d;
+}
+
+li {
+  color: #643900;
+}
+
+a {
+	color: #004618;
+}
