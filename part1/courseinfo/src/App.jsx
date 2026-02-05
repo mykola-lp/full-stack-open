@@ -1,21 +1,11 @@
 const Header = (props) => {
-  return (
-    <>
-      <h1>
-        {props.course.name}
-      </h1>
-    </>  
-  )
+  console.log(props)
+
+  return <h1>{props.course.name}</h1>
 }
 
 const Part = (props) => {
-  return (
-    <>
-      <p>
-        {props.parts.name} {props.parts.exercises}
-      </p>
-    </>  
-  )
+  return <p>{props.parts.name} {props.parts.exercises}</p>
 }
 
 const Content = (props) => {
@@ -29,13 +19,7 @@ const Content = (props) => {
 }
 
 const Total = (props) => {
-  return (
-    <>
-      <p>
-        Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}
-      </p>
-    </>
-  )
+  return <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
 }
 
 const App = () => {
