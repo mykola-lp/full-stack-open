@@ -89,5 +89,60 @@ const App = () => {
   )
 }
 ```
+---
 
+## Exercise 2.11 (Phonebook Step 6)
+
+* Store the initial state of the phonebook in a `db.json` file at the root of the project:
+
+```json
+{
+  "persons":[
+    { "name": "Arto Hellas", "number": "040-123456", "id": "1" },
+    { "name": "Ada Lovelace", "number": "39-44-5323523", "id": "2" },
+    { "name": "Dan Abramov", "number": "12-43-234345", "id": "3" },
+    { "name": "Mary Poppendieck", "number": "39-23-6423122", "id": "4" }
+  ]
+}
+```
+
+* Start `json-server` on port 3001 and verify that the server returns the list of people at:
+
+```
+http://localhost:3001/persons
+```
+
+* If port 3001 is already in use, close the other application or change the port. Example error:
+
+```
+Error: listen EADDRINUSE 0.0.0.0:3001
+```
+
+* Fetch the initial data from the server using the `axios` library.
+* Use a `useEffect` hook to perform the fetching after the first render.
+
+Example pattern:
+
+```js
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
+const App = () => {
+  const [persons, setPersons] = useState([])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => setPersons(response.data))
+  }, [])
+
+  return (
+    <div>
+      {/* ... render your phonebook */}
+    </div>
+  )
+}
+```
 * Avoid defining components inside other components incorrectly.
+
+* Ensure the component updates after the data is fetched and the state is set.
