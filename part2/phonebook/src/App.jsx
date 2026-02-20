@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 
-import axios from 'axios'
-
 import Header from './components/Header'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Footer from './components/Footer'
+import Notification from './components/Notification'
+
+import personsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,18 +16,27 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  useEffect(() => {
-    console.log('effect')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => {
-        console.log('promise fulfilled')
-      
-        setPersons(response.data)
-    })
+  const showNotification = (message) => {
+    setNotificationMessage(message)
+    setTimeout(() => setNotificationMessage(null), 5000)
+  }
+
+  const removePersonFromState = (id) => {
+    setPersons(persons.filter(p => p.id !== id))
+  }
+
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+      .catch(error => {
+        showNotification(`Failed to fetch persons: ${error.message}`)
+      })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const isDuplicate = (name) => {
     return persons.some(person => person.name.toLowerCase() === name.toLowerCase())
@@ -38,21 +49,67 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (isDuplicate(newName)) {
-      alert(`${newName} is already in the phonebook`)
+    if (!isDuplicate(newName)) {
+      const newPerson = { name: newName, number: newNumber }
+
+      personsService.create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          showNotification(`Added ${returnedPerson.name}`)
+        })
+        .catch(error => {
+          showNotification(`Failed to add ${newName}: ${error.message}`)
+        })
+
       return
     }
 
-    const newPerson = { name: newName, number: newNumber }
+    const existingPerson = persons.find(p => p.name.toLowerCase() === newName.toLowerCase())
 
-    setPersons(prevPersons =>
-      prevPersons.concat(newPerson)
-    )
+    if (!window.confirm(`${newName} is already in the phonebook. Replace the old number with the new one?`)) {
+      showNotification(`${newName} is already in the phonebook`)
+      return
+    }
+
+    const updatedPerson = { ...existingPerson, number: newNumber }
+
+    personsService.update(existingPerson.id, updatedPerson)
+      .then(returnedPerson => {
+        setPersons(
+          persons.map(p => p.id === existingPerson.id ? returnedPerson : p)
+        )
+        setNewName('')
+        setNewNumber('')
+        showNotification(`Updated ${returnedPerson.name}`)
+      })
+      .catch(error => {
+        removePersonFromState(existingPerson.id)
+        showNotification(`Information of '${existingPerson.name}' was already removed from server ${error.message}`)
+      })
+  }
+
+  const deletePerson = (id, name) => {
+    if (!window.confirm(`Delete ${name}?`)) return
+
+    personsService
+      .remove(id)
+      .then(() => {
+        removePersonFromState(id)
+        showNotification(`Deleted ${name}`)
+      })
+      .catch(error => {
+        removePersonFromState(id)
+        showNotification(`Information of '${name}' was already removed from server ${error.message}`)
+      })
   }
 
   return (
     <div>
       <Header level={2}>Phonebook</Header>
+
+      <Notification message={notificationMessage} />
 
       <Filter
         filter={filter}
@@ -71,7 +128,9 @@ const App = () => {
 
       <Header level={3}>Numbers</Header>
   
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handleDelete={deletePerson} />
+
+      <Footer />
     </div>
   )
 }
