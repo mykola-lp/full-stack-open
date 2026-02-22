@@ -16,11 +16,14 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
-  const showNotification = (message) => {
-    setNotificationMessage(message)
-    setTimeout(() => setNotificationMessage(null), 5000)
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type })
+
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const removePersonFromState = (id) => {
@@ -34,7 +37,7 @@ const App = () => {
         setPersons(initialPersons)
       })
       .catch(error => {
-        showNotification(`Failed to fetch persons: ${error.message}`)
+        showNotification(`Failed to fetch persons: ${error.message}`, 'error')
       })
   }, [])
 
@@ -60,7 +63,7 @@ const App = () => {
           showNotification(`Added ${returnedPerson.name}`)
         })
         .catch(error => {
-          showNotification(`Failed to add ${newName}: ${error.message}`)
+          showNotification(`Failed to add ${newName}: ${error.message}`, 'error')
         })
 
       return
@@ -86,7 +89,7 @@ const App = () => {
       })
       .catch(error => {
         removePersonFromState(existingPerson.id)
-        showNotification(`Information of '${existingPerson.name}' was already removed from server ${error.message}`)
+        showNotification(`Information of '${existingPerson.name}' was already removed from server ${error.message}`, 'error')
       })
   }
 
@@ -101,7 +104,7 @@ const App = () => {
       })
       .catch(error => {
         removePersonFromState(id)
-        showNotification(`Information of '${name}' was already removed from server ${error.message}`)
+        showNotification(`Information of '${name}' was already removed from server ${error.message}`, 'error')
       })
   }
 
@@ -109,7 +112,7 @@ const App = () => {
     <div>
       <Header level={2}>Phonebook</Header>
 
-      <Notification message={notificationMessage} />
+      <Notification notification={notification} />
 
       <Filter
         filter={filter}
