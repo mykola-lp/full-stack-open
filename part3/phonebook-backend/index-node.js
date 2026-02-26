@@ -120,6 +120,48 @@ const server = http.createServer((request, response) => {
       response.end(JSON.stringify(newPerson))
     })
   }
+
+  if (
+    req.method === 'PUT'
+    && req.url.startsWith('/api/persons/')
+  ) {
+
+    const id = req.url.split('/')[3]
+
+    let body = ''
+
+    req.on('data', chunk => {
+      body += chunk.toString()
+    })
+
+    req.on('end', () => {
+      const parsedBody = JSON.parse(body)
+
+      const index = persons.findIndex(p => p.id === id)
+
+      if (index === -1) {
+        res.statusCode = 404
+        res.setHeader(
+          'Content-Type', 'application/json'
+        )
+        res.end(JSON.stringify({
+          error: 'person not found'
+        }))
+
+        return
+      }
+
+      persons[index] = {
+        ...persons[index],
+        number: parsedBody.number
+      }
+
+      res.setHeader(
+        'Content-Type', 'application/json'
+      )
+      res.end(JSON.stringify(persons[index]))
+    })
+  }
 })
 
 server.listen(PORT, () => {

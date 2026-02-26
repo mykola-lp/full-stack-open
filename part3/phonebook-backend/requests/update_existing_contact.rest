@@ -1,0 +1,15 @@
+### Update an existing contact
+PUT http://localhost:3001/api/persons/1
+Content-Type: application/json
+
+{
+  "number": "999-888888"
+}
+
+### 404
+PUT http://localhost:3001/api/persons/999
+Content-Type: application/json
+
+{
+  "number": "000-000"
+}
