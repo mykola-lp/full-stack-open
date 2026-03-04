@@ -7,13 +7,13 @@ const phoneValidator = function(number) {
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minLength: 3,
-    required: true
+    required: [true, 'Name is required'],
+    minLength: [3, 'Name must be at least 3 characters long']
   },
   number: {
     type: String,
-    minLength: 8,
-    required: true,
+    required: [true, 'Phone number is required'],
+    minLength: [8, 'Phone number must be at least 8 characters long'],
     validate: {
       validator: phoneValidator,
       message: props => `${props.value} is not a valid phone number`
