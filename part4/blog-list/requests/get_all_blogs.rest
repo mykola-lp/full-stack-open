@@ -1,0 +1,3 @@
+### Get all blogs
+GET http://localhost:3001/api/blogs
+Accept: application/json
