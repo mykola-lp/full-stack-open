@@ -233,3 +233,106 @@ describe('total likes', () => {
 ```
 
 * If multiple authors tie, return any one.
+
+---
+
+## Exercises 4.8–4.12
+
+*Warning*: If you find yourself using `async/await` and `.then()` methods in the same code, it is almost guaranteed that you are doing something wrong. Use one or the other and **don't mix them**.
+
+---
+
+### 4.8: Blog List Tests, step 1
+
+* **HTTP GET request test**:
+
+  * Use the **SuperTest** library to write a test that makes an HTTP GET request to the `/api/blogs` URL.
+  * Verify that the blog list application returns the correct number of blog posts in **JSON format**.
+
+* **Refactor**:
+
+  * Once the test is finished, refactor the route handler to use the **async/await** syntax instead of promises.
+
+* **Notes**:
+
+  * You will need to set up a **test environment** to use a separate database for tests.
+  * When writing tests, it is better to **not execute them all at once** — only execute the ones you are working on.
+
+---
+
+### 4.9: Blog List Tests, step 2
+
+* **ID property test**:
+
+  * Write a test that verifies the unique identifier property of the blog posts is named `id`.
+  * By default, MongoDB uses `_id`.
+
+* **Implementation**:
+
+  * Make the required changes to the code so that the test passes.
+  * The `toJSON` method is an appropriate place to define the `id` property.
+
+---
+
+### 4.10: Blog List Tests, step 3
+
+* **POST request test**:
+
+  * Write a test that verifies that making an HTTP POST request to `/api/blogs` successfully creates a new blog post.
+  * At minimum, verify that the total number of blogs **increases by one**.
+  * You may also verify that the **content of the new blog post** is saved correctly in the database.
+
+* **Refactor**:
+
+  * Use **async/await** instead of promises once the test passes.
+
+---
+
+### 4.11*: Blog List Tests, step 4
+
+* **Likes default value test**:
+
+  * Write a test that verifies if the `likes` property is missing from the request, it will **default to 0**.
+  * Do **not** test other properties of the blog yet.
+
+* **Implementation**:
+
+  * Make the required changes to the code to pass the test.
+
+---
+
+### 4.12*: Blog List Tests, step 5
+
+* **Validation test for title and url**:
+
+  * Write tests for creating new blogs via `/api/blogs`.
+  * Verify that if **title** or **url** properties are missing from the request, the backend responds with **status code 400 (Bad Request)**.
+
+* **Implementation**:
+
+  * Make the required changes to the code so that the test passes.
+
+---
+
+## Exercises 4.13–4.14
+
+### 4.13: Blog List Expansions, step 1
+
+* **Deleting a blog post**:
+
+  * Implement functionality for deleting a single blog post resource.
+  * Use **async/await**.
+  * Follow **RESTful conventions** for the HTTP API.
+  * Implement **tests** to verify the functionality.
+
+---
+
+### 4.14: Blog List Expansions, step 2
+
+* **Updating a blog post**:
+
+  * Implement functionality for updating an individual blog post.
+  * Use **async/await**.
+  * Focus on updating the **number of likes**.
+  * Implementation can follow the same approach as updating notes in part 3.
+  * Implement **tests** to verify the functionality.
