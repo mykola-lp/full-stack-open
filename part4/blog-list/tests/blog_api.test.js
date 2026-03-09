@@ -3,6 +3,7 @@ const supertest = require('supertest')
 
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('../utils/test_helper')
 
 const api = supertest(app)
@@ -129,6 +130,47 @@ describe('deleting and updating blogs', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body.likes).toBe(newLikes)
+  })
+})
+
+describe('when there is initially some blogs', () => {
+  let user
+
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    user = new User({ username: 'root', passwordHash: '...' })
+    await user.save()
+
+    const blog = new Blog({
+      title: 'First blog',
+      author: 'John',
+      url: 'http://...',
+      user: user._id
+    })
+    await blog.save()
+  })
+
+  test('blogs are returned as json', async () => {
+    await api.get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('a blog can be added', async () => {
+    const newBlog = {
+      title: 'New blog',
+      author: 'Test',
+      url: 'http://new.com',
+      likes: 5,
+      userId: user._id
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
   })
 })
 

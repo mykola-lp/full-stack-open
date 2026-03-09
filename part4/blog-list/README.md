@@ -336,3 +336,48 @@ describe('total likes', () => {
   * Focus on updating the **number of likes**.
   * Implementation can follow the same approach as updating notes in part 3.
   * Implement **tests** to verify the functionality.
+
+---
+
+## User Administration (Part 4 – Blog List)
+
+> **Note:** There were no explicit exercises for this topic in the course. The following steps were implemented to extend the application functionality.
+
+### What was done:
+
+* **User model created** (`models/user.js`) with:
+
+  * `username`, `name`, `passwordHash`
+  * Array of `blogs` referencing the blogs created by the user
+  * `toJSON` transformation to hide password hashes and convert `_id` to `id`
+
+* **User creation route** (`controllers/users.js`):
+
+  * Implemented `POST /api/users` to create new users
+  * Passwords hashed with `bcrypt`
+  * Users can be created manually via script or API
+
+* **Blog model updated** (`models/blog.js`) to include:
+
+  * Reference to the `user` who created the blog (`user: ObjectId`)
+  * Default value for `likes` if not provided
+
+* **Seed scripts**:
+
+  * `testUser.js` – creates a test user if it doesn’t exist
+  * `testBlog.js` – creates a blog linked to a user
+  * `seed.js` – optional combined script linking blogs and users
+
+* **Integration in API**:
+
+  * `POST /api/blogs` now expects a `userId` field to link the blog to a user
+  * Blogs are saved and the corresponding user's `blogs` array is updated
+  * Populated responses show the blog along with minimal user info (`username`, `name`)
+
+### Notes / Limitations:
+
+* No automated exercises or tests were provided in the course for User administration.
+* Seed scripts bypass REST API logic (middleware, validation) – intended only to populate the database for testing purposes.
+* Direct manipulation of MongoDB is “safe” for development but not recommended for production or formal tests.
+* All user–blog relationships were implemented manually to simulate ownership and support testing of linked data.
+
