@@ -117,7 +117,7 @@ app.use(express.json())
 
 ---
 
-### Exercise 4.3 (Step 1 — Dummy Function)
+### Exercise 4.3 (Step 3 — Dummy Function)
 
 * Define a **dummy function** that always returns `1`:
 
@@ -147,7 +147,7 @@ test('dummy returns one', () => {
 
 ---
 
-### Exercise 4.4 (Step 2 — Total Likes)
+### Exercise 4.4 (Step 4 — Total Likes)
 
 * Define a `totalLikes` function:
 
@@ -184,7 +184,7 @@ describe('total likes', () => {
 
 ---
 
-### Exercise 4.5* (Step 3 — Favorite Blog)
+### Exercise 4.5* (Step 5 — Favorite Blog)
 
 * Define a `favoriteBlog` function:
 
@@ -196,7 +196,7 @@ describe('total likes', () => {
 
 ---
 
-### Exercise 4.6* (Step 4 — Most Blogs)
+### Exercise 4.6* (Step 6 — Most Blogs)
 
 * Define a `mostBlogs` function:
 
@@ -217,7 +217,7 @@ describe('total likes', () => {
 
 ---
 
-### Exercise 4.7* (Step 5 — Most Likes)
+### Exercise 4.7* (Step 7 — Most Likes)
 
 * Define a `mostLikes` function:
 
@@ -242,7 +242,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.8: Blog List Tests, step 1
+### 4.8: Blog List Tests, step 8
 
 * **HTTP GET request test**:
 
@@ -260,7 +260,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.9: Blog List Tests, step 2
+### 4.9: Blog List Tests, step 9
 
 * **ID property test**:
 
@@ -274,7 +274,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.10: Blog List Tests, step 3
+### 4.10: Blog List Tests, step 10
 
 * **POST request test**:
 
@@ -288,7 +288,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.11*: Blog List Tests, step 4
+### 4.11*: Blog List Tests, step 11
 
 * **Likes default value test**:
 
@@ -301,7 +301,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.12*: Blog List Tests, step 5
+### 4.12*: Blog List Tests, step 12
 
 * **Validation test for title and url**:
 
@@ -316,7 +316,7 @@ describe('total likes', () => {
 
 ## Exercises 4.13–4.14
 
-### 4.13: Blog List Expansions, step 1
+### 4.13: Blog List Expansions, step 13
 
 * **Deleting a blog post**:
 
@@ -327,7 +327,7 @@ describe('total likes', () => {
 
 ---
 
-### 4.14: Blog List Expansions, step 2
+### 4.14: Blog List Expansions, step 14
 
 * **Updating a blog post**:
 
@@ -381,3 +381,122 @@ describe('total likes', () => {
 * Direct manipulation of MongoDB is “safe” for development but not recommended for production or formal tests.
 * All user–blog relationships were implemented manually to simulate ownership and support testing of linked data.
 
+---
+
+## Exercises 4.15–4.23
+
+In the next exercises, the basics of user management will be implemented for the Bloglist application. The safest way is to follow the course material from part 4 chapter **User administration** to the chapter **Token authentication**. Creativity is allowed, but do **not mix async/await with then calls**—use only one style consistently.
+
+---
+
+### 4.15: Blog List Expansion, step 3
+
+* **Creating new users**:
+
+  * Implement HTTP POST request to `api/users`.
+  * Users have **username**, **password**, and **name**.
+  * Do **not** save passwords as clear text; use **bcrypt** (or `bcryptjs` if bcrypt fails on Windows).
+  * Implement a way to list all users via a suitable HTTP request.
+
+---
+
+### 4.16*: Blog List Expansion, step 4
+
+* **User creation restrictions**:
+
+  * Both username and password must be provided.
+  * Minimum length: 3 characters.
+  * Username must be **unique**.
+  * Respond with appropriate status code and error message if invalid.
+  * Validate password in the controller before Mongoose validation.
+  * Implement tests ensuring invalid users are **not** created.
+
+---
+
+### 4.17: Blog List Expansion, step 5
+
+* **Blogs and creators**:
+
+  * Expand blogs to include information about the creator.
+  * When adding a blog, assign a user from the database as its creator.
+  * Modify listing of all blogs to embed creator info in JSON.
+  * Modify listing of all users to embed their blogs.
+
+---
+
+### 4.18: Blog List Expansion, step 6
+
+* **Token-based authentication**:
+
+  * Implement authentication as per part 4 chapter **Token authentication**.
+
+---
+
+### 4.19: Blog List Expansion, step 7
+
+* **Securing blog creation**:
+
+  * Only allow adding blogs if a valid token is sent.
+  * The user identified by the token becomes the creator.
+
+---
+
+### 4.20*: Blog List Expansion, step 8
+
+* **Token middleware**:
+
+  * Refactor token extraction into a middleware `tokenExtractor`.
+  * Extract token from **Authorization** header.
+  * Assign token to `request.token`.
+  * Routes can access token via `request.token`.
+  * Middleware structure:
+
+  ```js
+  const tokenExtractor = (request, response, next) => {
+    // extract token
+    next()
+  }
+  ```
+
+---
+
+### 4.21*: Blog List Expansion, step 9
+
+* **Secure blog deletion**:
+
+  * Only the creator of a blog can delete it.
+  * Require token validation; respond with suitable status if invalid.
+  * Convert `blog.user` object ID to string before comparison:
+
+  ```js
+  if (blog.user.toString() === userId.toString()) { ... }
+  ```
+
+---
+
+### 4.22*: Blog List Expansion, step 10
+
+* **User middleware**:
+
+  * Create `userExtractor` middleware to attach user to `request.user`.
+  * Register middleware per-route or for all `/api/blogs` routes.
+  * Blog creation and deletion handlers access user directly:
+
+  ```js
+  blogsRouter.post('/', userExtractor, async (request, response) => {
+    const user = request.user
+    // ..
+  })
+  ```
+
+  * Ensure fetching all blogs (GET) works without a token.
+
+---
+
+### 4.23*: Blog List Expansion, step 11
+
+* **Fixing tests after authentication**:
+
+  * Update tests broken by token-based authentication.
+  * Add test to ensure blog creation fails with `401 Unauthorized` if no token is provided.
+  * Push finished exercises to GitHub and mark them in the submission system.

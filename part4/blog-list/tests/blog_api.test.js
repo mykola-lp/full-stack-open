@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 
 const app = require('../app')
 const Blog = require('../models/blog')
@@ -42,20 +43,29 @@ describe('when the database contains pre-existing blogs', () => {
 describe('fetching a specific blog by id', () => {
 
   test('a valid blog can be added', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({
+        username: 'root',
+        password: 'sekret'
+      })
+
+    const token = loginResponse.body.token
+
     const newBlog = {
-      title: 'New blog',
-      author: 'Tester',
-      url: 'http://new.com',
+      title: 'test blog',
+      author: 'tester',
+      url: 'http://test.com',
       likes: 3
     }
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
-      .expect(201)
 
     const blogs = await helper.blogsInDb()
-    expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
+    expect(blogs.map(b => b.title)).toContain('test blog')
   })
 
   test('if likes are missing it will default to 0', async () => {
@@ -65,8 +75,10 @@ describe('fetching a specific blog by id', () => {
       url: 'http://nolikes.com'
     }
 
-    const response = await api
-      .post('/api/blogs')
+    const token = await helper.loginAndGetToken('root', 'sekret')
+
+    const response = await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
 
@@ -96,6 +108,20 @@ describe('fetching a specific blog by id', () => {
       .send(newBlog)
       .expect(400)
   })
+
+  test('adding blog fails without token', async () => {
+    const newBlog = {
+      title: 'token test',
+      author: 'tester',
+      url: 'http://test.com',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+  })
 })
 
 describe('deleting and updating blogs', () => {
@@ -108,8 +134,17 @@ describe('deleting and updating blogs', () => {
   test('a blog can be deleted', async () => {
     const blogToDelete = blogsAtStart[0]
 
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const token = loginResponse.body.token
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -140,7 +175,8 @@ describe('when there is initially some blogs', () => {
     await Blog.deleteMany({})
     await User.deleteMany({})
 
-    user = new User({ username: 'root', passwordHash: '...' })
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    user = new User({ username: 'root', passwordHash })
     await user.save()
 
     const blog = new Blog({
@@ -167,10 +203,29 @@ describe('when there is initially some blogs', () => {
       userId: user._id
     }
 
+    const loginResponse = await api
+      .post('/api/login')
+      .send({
+        username: 'root',
+        password: 'sekret'
+      })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const token = loginResponse.body.token
+
+    const blogsAtStart = await helper.blogsInDb()
+
     await api.post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
-      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
+
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).toContain('New blog')
   })
 })
 

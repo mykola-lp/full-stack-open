@@ -60,7 +60,7 @@ async function run() {
     const populatedUser = await User.findById(user._id).populate('blogs')
     console.log('\nUser with populated blogs:', populatedUser.toJSON())
 
-    console.log('\n✅ Seeder finished successfully!')
+    console.log('\nSeeder finished successfully!')
 
   } catch (err) {
     console.error('Error in seeding script:', err)
