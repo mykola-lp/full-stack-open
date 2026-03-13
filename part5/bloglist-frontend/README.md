@@ -241,3 +241,26 @@ PUT /api/blogs/5a43fde2cbd20b12a2c34e91
 * Fix all **linting errors**.  
 
 > Note: Vite installs ESLint by default; you only need to define your configuration and correct issues.
+
+---
+
+## Exercises 5.13.-5.16. (Blog List Tests)
+
+### 5.13: Blog List Tests, step 1
+
+* Test that **blog component** renders title and author.
+* By default, URL and likes are **not shown**.
+* Add CSS classes for testing if needed.
+
+### 5.14: Blog List Tests, step 2
+
+* Test that URL and likes are shown **after clicking toggle button**.
+
+### 5.15: Blog List Tests, step 3
+
+* Test that clicking the **like button twice** calls the event handler **twice**.
+
+### 5.16: Blog List Tests, step 4
+
+* Test **new blog form**.
+* Ensure that submitting the form calls event handler with **correct details**.
