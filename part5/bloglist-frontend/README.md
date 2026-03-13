@@ -119,3 +119,125 @@ Examples:
 Notifications should appear **at the top of the page** and remain visible for **a few seconds**.
 
 Adding colors to the notifications is **optional**.
+
+---
+
+## Exercises 5.5.-5.12.
+
+### Exercise 5.5 (Blog List Frontend Step 5)
+
+Modify the form for creating blog posts so that it is **only displayed when appropriate**.  
+
+* By default, the form is **not visible**  
+  browser showing **new note button with no form**
+
+* The form expands when the **"create new blog" button** is clicked  
+  browser showing **form with create new**
+
+* The form hides again after a **new blog is created** or the **cancel button** is pressed.
+
+> Tip: You can use the **Togglable component** from part 5, or implement similar functionality.
+
+---
+
+### Exercise 5.6 (Blog List Frontend Step 6)
+
+* Separate the form for creating a new blog into its **own component**, if not done already.  
+* Move all **state variables required for creating a blog** into this component.  
+* The component should work like the **NoteForm component** from part 5.
+
+---
+
+### Exercise 5.7 (Blog List Frontend Step 7)
+
+* Add a **button to each blog** to control whether all blog details are shown.  
+
+* Clicking the button should **toggle full details** of the blog.  
+  browser showing **full details of a blog**; other blogs show only **view buttons**  
+
+* At this point, the **like button does not need to work**.  
+
+* Example of inline styles for a blog component:
+
+```js
+const Blog = ({ blog }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
+  return (
+    <div style={blogStyle}>      
+      <div>
+        {blog.title} {blog.author}
+      </div>
+      // ...
+    </div>
+  )
+}
+```
+
+> Note: Even if the functionality is similar to the Togglable component, it cannot be used directly.  
+> The easiest solution is to add a **state in the Blog component** to track if details are displayed.
+
+---
+
+### Exercise 5.8 (Blog List Frontend Step 8)
+
+* Implement the **like button functionality**.  
+* Likes should be increased by making an **HTTP PUT request** to the unique blog post URL.  
+* Include **all fields of the blog** in the request body.
+
+Example:
+
+```json
+PUT /api/blogs/5a43fde2cbd20b12a2c34e91
+{
+  "user": "5a43e6b6c37f3d065eaaa581",
+  "likes": 1,
+  "author": "Joel Spolsky",
+  "title": "The Joel Test: 12 Steps to Better Code",
+  "url": "https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/"
+}
+```
+
+> Make sure the backend handles the **user reference** as well.
+
+---
+
+### Exercise 5.9 (Blog List Frontend Step 9)
+
+* If a blog is liked, check that the **name of the user who added the blog** is displayed.  
+* If the name is missing on like, **fix the problem**.  
+* If your code is correct and no problem occurs, you can skip this step.
+
+---
+
+### Exercise 5.10 (Blog List Frontend Step 10)
+
+* Modify the application to **sort blogs by number of likes**.  
+* Use **JavaScript array `sort` method** for sorting.
+
+---
+
+### Exercise 5.11 (Blog List Frontend Step 11)
+
+* Add a **delete button** for blog posts.  
+* Implement the **frontend logic for deleting blogs**.  
+
+* Only show the delete button if the blog was **added by the logged-in user**.  
+* Use `window.confirm` to show a **confirmation dialog** before deleting.  
+  browser showing **confirmation of blog removal**
+
+---
+
+### Exercise 5.12 (Blog List Frontend Step 12)
+
+* Add **ESLint** to the project.  
+* Define your desired **configuration** in `eslint.config.js`.  
+* Fix all **linting errors**.  
+
+> Note: Vite installs ESLint by default; you only need to define your configuration and correct issues.

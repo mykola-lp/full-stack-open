@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRef } from 'react'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -6,12 +7,14 @@ import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService
@@ -59,6 +62,7 @@ const App = () => {
   const createBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
+      blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(returnedBlog))
 
       setNotification({
@@ -72,6 +76,46 @@ const App = () => {
     } catch {
       setNotification({
         text: 'error creating blog',
+        type: 'error'
+      })
+
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user?.id || blog.user
+    }
+
+    const returnedBlog = await blogService.update(blog.id, updatedBlog)
+
+    setBlogs(blogs.map(b =>
+      b.id === blog.id
+        ? { ...returnedBlog, user: blog.user }
+        : b
+    ))
+  }
+
+  const handleDelete = async (blog) => {
+    const confirmDelete = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}?`
+    )
+
+    if (!confirmDelete) return
+
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    } catch {
+      setNotification({
+        text: 'error deleting blog',
         type: 'error'
       })
 
@@ -104,11 +148,22 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <BlogForm createBlog={createBlog} />
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+        <BlogForm createBlog={createBlog} />
+      </Togglable>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {[...blogs]
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
+
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLike={handleLike}
+            handleDelete={handleDelete}
+            user={user}
+          />
+        )}
     </div>
   )
 }
