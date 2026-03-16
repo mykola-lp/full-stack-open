@@ -8,6 +8,7 @@
     "test": "cross-env NODE_ENV=test jest --verbose",
     "test:only": "cross-env NODE_ENV=test jest --verbose -t",
     "tNode": "node --test tests/dummy.test.js",
+    "start:test": "cross-env NODE_ENV=test node --watch index.js",
     "lint": "eslint ."
   },
   "author": "",
