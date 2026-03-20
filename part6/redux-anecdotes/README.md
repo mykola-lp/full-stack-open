@@ -177,3 +177,46 @@ As the initial backend data, you can use, e.g. this.
 ### Exercise 6.15: Anecdotes and the Backend, step 2
 
 Modify the creation of new anecdotes, so that the anecdotes are stored in the backend. Utilize the Fetch API in your implementation once again.
+
+---
+
+## Exercises 6.16.-6.19.
+
+### Exercise 6.16: Anecdotes and the Backend, step 3
+
+Modify the initialization of the Redux store to happen using asynchronous action creators, which are made possible by the Redux Thunk library.
+
+---
+
+### Exercise 6.17: Anecdotes and the Backend, step 4
+
+Also modify the creation of a new anecdote to happen using asynchronous action creators, made possible by the Redux Thunk library.
+
+---
+
+### Exercise 6.18: Anecdotes and the Backend, step 5
+
+Voting does not yet save changes to the backend. Fix the situation with the help of the Redux Thunk library and the Fetch API.
+
+### Exercise 6.19: Anecdotes and the Backend, step 6
+
+The creation of notifications was simplified by implementing an action creator that handles both setting and clearing the notification with a timeout.
+
+Previously, creating a notification required dispatching two separate actions and manually using `setTimeout`:
+
+```js
+dispatch(setNotification(`new anecdote '${content}'`))
+setTimeout(() => {
+  dispatch(clearNotification())
+}, 5000)
+```
+
+This was replaced with a single action creator that accepts the notification message and display duration (in seconds):
+
+```js
+dispatch(setNotification(`you voted '${anecdote.content}'`, 10))
+```
+
+The first parameter defines the notification text, and the second parameter specifies how long the notification is shown.
+
+This improved notification logic has been implemented across the application.
