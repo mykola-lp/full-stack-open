@@ -18,11 +18,14 @@ const asObject = anecdote => ({
   votes: 0
 })
 
+// Local initial data used only for development or when backend (json-server) is not available.
+// In the exercises where a backend is used, anecdotes are fetched from the server instead
+// (see useEffect + setAnecdotes action).
 const initialState = anecdotesAtStart.map(asObject)
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
-  initialState,
+  initialState: [],
   reducers: {
     voteAnecdote(state, action) {
       const id = action.payload
@@ -31,14 +34,14 @@ const anecdoteSlice = createSlice({
     },
 
     createAnecdote(state, action) {
-      state.push({
-        content: action.payload,
-        id: generateId(999999),
-        votes: 0
-      })
+      state.push(action.payload)
+    },
+
+    setAnecdotes(state, action) {
+      return action.payload
     }
   }
 })
 
-export const { voteAnecdote, createAnecdote } = anecdoteSlice.actions
+export const { voteAnecdote, createAnecdote, setAnecdotes } = anecdoteSlice.actions
 export default anecdoteSlice.reducer

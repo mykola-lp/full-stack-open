@@ -32,7 +32,7 @@ const AnecdoteList = () => {
 
                 setTimeout(() => {
                   dispatch(clearNotification())
-                }, 5000)
+                }, 8000)
               }}
             >
               vote

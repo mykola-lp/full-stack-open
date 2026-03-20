@@ -161,3 +161,19 @@ Extend the application so that it uses the `Notification` component to display a
 browser showing message of having voted
 
 It's recommended to create separate action creators for setting and removing notifications.
+
+---
+
+## Exercises 6.14.-6.15.
+
+### Exercise 6.14: Anecdotes and the Backend, step 1
+
+When the application launches, fetch the anecdotes from the backend implemented using json-server. Use the Fetch API to make the HTTP request.
+
+As the initial backend data, you can use, e.g. this.
+
+---
+
+### Exercise 6.15: Anecdotes and the Backend, step 2
+
+Modify the creation of new anecdotes, so that the anecdotes are stored in the backend. Utilize the Fetch API in your implementation once again.
