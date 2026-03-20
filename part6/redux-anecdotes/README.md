@@ -71,3 +71,34 @@ const App = () => {
 
 export default App
 ```
+---
+
+## Exercise 6.9
+
+### 6.9 Anecdotes, step 7
+
+Implement filtering for the anecdotes that are displayed to the user.
+browser showing filtering of anecdotes
+
+Store the state of the filter in the Redux store. It is recommended to create a new reducer, action creators, and a combined reducer for the store using the `combineReducers` function.
+
+Create a new `Filter` component for displaying the filter. You can use the following code as a template for the component:
+
+```js
+const Filter = () => {
+  const handleChange = (event) => {
+    // input-field value is in variable event.target.value
+  }
+  const style = {
+    marginBottom: 10
+  }
+
+  return (
+    <div style={style}>
+      filter <input onChange={handleChange} />
+    </div>
+  )
+}
+
+export default Filter
+```
