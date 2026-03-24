@@ -17,11 +17,13 @@ export const createAnecdote = async (anecdote) => {
     body: JSON.stringify(anecdote),
   })
 
+  const data = await response.json()
+
   if (!response.ok) {
-    throw new Error('Failed to create anecdote')
+    throw new Error(data.error)
   }
 
-  return response.json()
+  return data
 }
 
 export const updateAnecdote = async (anecdote) => {
@@ -31,9 +33,11 @@ export const updateAnecdote = async (anecdote) => {
     body: JSON.stringify(anecdote),
   })
 
+  const data = await response.json()
+
   if (!response.ok) {
-    throw new Error('Failed to update anecdote')
+    throw new Error(data.error || 'Failed to update anecdote')
   }
 
-  return response.json()
+  return data
 }

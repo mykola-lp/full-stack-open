@@ -4,8 +4,12 @@ import { getAnecdotes, updateAnecdote } from './requests'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
+import { useNotification } from './context/NotificationContext'
+import { setNotificationWithTimeout } from './context/NotificationHelper'
+
 const App = () => {
   const queryClient = useQueryClient()
+  const [, dispatch] = useNotification()
 
   const result = useQuery({
     queryKey: ['anecdotes'],
@@ -16,8 +20,13 @@ const App = () => {
 
   const voteMutation = useMutation({
     mutationFn: updateAnecdote,
-    onSuccess: () => {
+    onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+
+      setNotificationWithTimeout(
+        dispatch,
+        `you voted: "${updated.content}"`
+      )
     },
   })
 

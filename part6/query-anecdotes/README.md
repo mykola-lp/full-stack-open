@@ -63,3 +63,34 @@ You don't have to worry about error handling in this step.
 Implement voting for anecdotes using React Query.
 
 The application should automatically render the increased number of votes for the voted anecdote.
+
+---
+
+## Exercises 6.23.-6.24.
+
+Now extend the anecdote application by adding a global notification system and improving error handling.
+
+---
+
+### Exercise 6.23
+
+The application has a `Notification` component for displaying notifications to the user.
+
+Implement the application's notification state management using the `useReducer` hook and Context API. The notification should inform the user when:
+
+* a new anecdote is created
+* an anecdote is voted on
+
+The notification must be displayed for five seconds and then automatically cleared.
+
+---
+
+### Exercise 6.24
+
+As stated in exercise 6.21, the server requires that the content of the anecdote to be added is at least 5 characters long.
+
+Implement error handling for anecdote creation. In practice, it is sufficient to display a notification to the user when a POST request fails due to invalid input.
+
+The error condition should be handled in the mutation callback function (e.g. `onError` in React Query). When a failure occurs, the user should see a notification indicating that the anecdote is too short.
+
+This is the final exercise for this part of the course. After completing it, push your code to GitHub and mark all completed exercises in the submission system.
