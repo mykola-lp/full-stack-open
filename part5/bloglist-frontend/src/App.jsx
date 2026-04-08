@@ -11,6 +11,7 @@ import BlogDetails from './components/BlogDetails'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import AboutPage from './components/AboutPage'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -167,6 +168,14 @@ const App = () => {
                 login
               </Button>
             )}
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to="/about"
+              sx={{ color: '#ffffff', fontWeight: 600 }}
+            >
+              about
+            </Button>
 
             {user && (
               <>
@@ -230,6 +239,10 @@ const App = () => {
                 <LoginForm handleLogin={handleLogin} />
               </div>
             )}
+          />
+          <Route
+            path="/about"
+            element={<AboutPage />}
           />
           <Route
             path="/create"
