@@ -264,3 +264,73 @@ PUT /api/blogs/5a43fde2cbd20b12a2c34e91
 
 * Test **new blog form**.
 * Ensure that submitting the form calls event handler with **correct details**.
+
+---
+
+## Exercises 5.24–5.28
+
+In this part we will create a **routed blogs application** with React Router.
+
+* Clicking links in the navigation bar controls which view is displayed.
+* At the root path `/`, a list of all blogs is displayed.
+* The path `/login` allows users to log in.
+* If the user is logged in, a logout button appears in the navigation bar.
+* After logging in and out, the user should be directed to the page that lists all blogs.
+* At this stage, creating new blogs is not required.
+
+> ⚠️ Warning
+> Make sure the "Like" feature works only for logged-in users, and tests may break during implementation.
+
+---
+
+### Exercise 5.24 (Routed Blogs, Step 1)
+
+Add React Router to the blogs application so that clicking the links in the navigation bar allows you to control which view is displayed.
+
+* Root path `/` → list of all blogs
+* Path `/login` → login view
+* Logout button appears if user is logged in
+* Login/logout redirects to all blogs view
+
+---
+
+### Exercise 5.25 (Routed Blogs, Step 2)
+
+Implement a view that displays information for a **single blog post**:
+
+* Users navigate to this view from the blog list
+* Ensure the "Like" feature works correctly
+* Only logged-in users can "Like" a blog
+
+---
+
+### Exercise 5.26 (Routed Blogs, Step 3)
+
+Create a view for **creating a new blog**:
+
+* Accessible via navigation by logged-in users
+* Adding a new blog or deleting an existing blog should redirect to the all blogs view
+
+---
+
+### Exercise 5.27 (Routed Blogs, Step 4)
+
+Modify **Vitest tests** for the single blog view:
+
+* Blog information and number of likes are displayed to unauthenticated users; buttons are not displayed
+* Authenticated users (not the creator) see only the like button
+* Blog creator sees the delete button as well
+
+---
+
+### Exercise 5.28 (Routed Blogs, Step 5)
+
+Fix **end-to-end tests** created with Playwright:
+
+* Login succeeds with correct username/password
+* Login fails with incorrect username/password
+* Logged-in users can create blogs
+* Logged-in users can like blogs
+* Logged-in users can delete blogs
+
+> Sorting blogs by likes is **not tested** at this stage
