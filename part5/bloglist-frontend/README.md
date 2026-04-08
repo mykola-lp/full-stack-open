@@ -334,3 +334,46 @@ Fix **end-to-end tests** created with Playwright:
 * Logged-in users can delete blogs
 
 > Sorting blogs by likes is **not tested** at this stage
+
+---
+
+## Exercises 5.29–5.31
+
+In this part we will improve the **styles of the blog application** using either **MaterialUI or Styled Components**.
+
+* Apply consistent styling across the app
+* Improve usability and visual structure
+* Focus on forms, navigation, notifications, and blog views
+
+> ⚠️ Warning
+> Choose **one styling approach** (MaterialUI OR Styled Components) and use it consistently across the application.
+
+---
+
+### Exercise 5.29 (Styled Blogs, Step 1)
+
+Add styles to the application’s **forms**:
+
+* Style the **login form**
+* Style the **form for creating a new blog**
+* Ensure proper spacing, alignment, and readability
+
+---
+
+### Exercise 5.30 (Styled Blogs, Step 2)
+
+Style the **navigation bar** and **notification component**:
+
+* Improve layout and spacing of navigation links
+* Make notifications visually clear (success/error states)
+* Ensure consistent styling with the rest of the app
+
+---
+
+### Exercise 5.31 (Styled Blogs, Step 3)
+
+Customize the appearance of the **single blog view**:
+
+* Improve layout and readability
+* Style blog details (title, author, likes, buttons)
+* Apply consistent design with the rest of the app

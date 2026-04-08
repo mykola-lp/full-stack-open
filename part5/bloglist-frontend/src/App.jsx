@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Link, Navigate, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
+import { Link as RouterLink, Navigate, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
+
+import { Container, AppBar, Toolbar, Button, Box, Typography } from '@mui/material'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import BlogList from './components/BlogList'
 import BlogDetails from './components/BlogDetails'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
@@ -134,77 +137,112 @@ const App = () => {
     : null
 
   return (
-    <div>
-      <Notification message={notification} />
+    <Container>
+      <div>
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            mt: 2,
+            borderRadius: 3,
+            backgroundColor: '#8b735f',
+          }}
+        >
+          <Toolbar sx={{ gap: 1.5, minHeight: 72 }}>
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to="/"
+              sx={{ color: '#ffffff', fontWeight: 600 }}
+            >
+              blogs
+            </Button>
+            {!user && (
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/login"
+                sx={{ color: '#ffffff', fontWeight: 600 }}
+              >
+                login
+              </Button>
+            )}
 
-      <nav>
-        <Link to="/">blogs</Link>
-        {' '}
-        <Link to="/login">login</Link>
-        {' '}
-        {user && (
-          <>
-            <Link to="/create">new blog</Link>
-            {' '}
-            <span>{user.name} logged in</span>
-            {' '}
-            <button onClick={handleLogout}>logout</button>
-          </>
-        )}
-      </nav>
+            {user && (
+              <>
+                <Button
+                  color="inherit"
+                  component={RouterLink}
+                  to="/create"
+                  sx={{ color: '#ffffff', fontWeight: 600 }}
+                >
+                  new blog
+                </Button>
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <h2>blogs</h2>
+                <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Typography sx={{ color: '#ffffff', fontWeight: 500 }}>
+                    {user.name} logged in
+                  </Typography>
 
-              <ul>
-                {[...blogs]
-                  .sort((a, b) => b.likes - a.likes)
-                  .map(blog => (
-                    <li key={blog.id}>
-                      <Link to={`/blogs/${blog.id}`}>
-                        {blog.title} {blog.author}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          }
-        />
-        <Route
-          path="/blogs/:id"
-          element={
-            <BlogDetails
-              blog={blog}
-              handleLike={handleLike}
-              handleDelete={handleDelete}
-              user={user}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" replace /> : (
-            <div>
-              <h2>log in to application</h2>
-              <LoginForm handleLogin={handleLogin} />
-            </div>
-          )}
-        />
-        <Route
-          path="/create"
-          element={user ? (
-            <div>
-              <h2>create new</h2>
-              <BlogForm createBlog={createBlog} />
-            </div>
-          ) : <Navigate to="/login" replace />}
-        />
-      </Routes>
-    </div>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outlined"
+                    sx={{
+                      color: '#ffffff',
+                      borderColor: 'rgba(255, 255, 255, 0.55)',
+                      '&:hover': {
+                        borderColor: '#ffffff',
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      },
+                    }}
+                  >
+                    logout
+                  </Button>
+                </Box>
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+
+        <Notification message={notification} />
+
+        <Routes>
+          <Route
+            path="/"
+            element={<BlogList blogs={blogs} />}
+          />
+          <Route
+            path="/blogs/:id"
+            element={
+              <BlogDetails
+                blog={blog}
+                handleLike={handleLike}
+                handleDelete={handleDelete}
+                user={user}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" replace /> : (
+              <div>
+                <h2>log in to application</h2>
+                <LoginForm handleLogin={handleLogin} />
+              </div>
+            )}
+          />
+          <Route
+            path="/create"
+            element={user ? (
+              <div>
+                <h2>create new</h2>
+                <BlogForm createBlog={createBlog} />
+              </div>
+            ) : <Navigate to="/login" replace />}
+          />
+        </Routes>
+      </div>
+    </Container>
   )
 }
 
