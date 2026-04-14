@@ -1,0 +1,35 @@
+{
+  "name": "blogapp",
+  "private": true,
+  "version": "1.0.0",
+
+  "_comment": [
+    "Recommended root scripts:",
+    "npm run build — builds frontend",
+    "npm run build:client — builds frontend only",
+    "npm run dev — runs server + client in parallel via concurrently",
+    "npm run dev:tui — runs custom TUI launcher",
+    "npm run dev:server — backend only (development)",
+    "npm run dev:client — frontend only (Vite dev server)",
+    "npm run start — runs backend in production",
+    "npm run start:prod — builds the app and starts the production server",
+    "npm run test:server — server tests",
+    "npm run test:client — client tests",
+    "npm install --prefix client / server — install packages for specific part"
+  ],
+  "scripts": {
+    "build": "npm run build:client",
+    "build:client": "npm --prefix client run build",
+    "dev": "concurrently -n server,client -c red,blue --kill-others \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:tui": "node scripts/dev.js",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start": "npm --prefix server start",
+    "start:prod": "npm run build && npm run start",
+    "test:server": "npm --prefix server test",
+    "test:client": "npm --prefix client test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
