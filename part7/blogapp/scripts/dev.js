@@ -132,7 +132,10 @@ function appendLine(pane, line, source = 'out') {
     return
   }
 
-  pane.scrollOffset = Math.min(pane.scrollOffset + 1, Math.max(pane.lines.length - 1, 0))
+  pane.scrollOffset = Math.min(
+    pane.scrollOffset + 1,
+    Math.max(pane.lines.length - 1, 0)
+  )
 }
 
 function flushBuffer(pane, key, source) {
@@ -150,7 +153,7 @@ function consumeStream(pane, key, source, chunk) {
   const parts = pane[key].split(/\r?\n/)
   pane[key] = parts.pop() || ''
 
-  parts.forEach(line => appendLine(pane, line, source))
+  parts.forEach((line) => appendLine(pane, line, source))
 
   scheduleRender()
 }
@@ -236,8 +239,8 @@ function makeEmptyContent(width, active) {
 function getWrappedLines(pane, contentWidth) {
   const wrapped = []
 
-  pane.lines.forEach(line => {
-    wrapLine(line, contentWidth).forEach(chunk => {
+  pane.lines.forEach((line) => {
+    wrapLine(line, contentWidth).forEach((chunk) => {
       wrapped.push(chunk)
     })
   })
@@ -282,20 +285,27 @@ function getPaneOutput(pane, width, height) {
   const borderColor = isActive ? colors.bold + accent : accent
   const topBorder = topBorderPlain
     .replace(titleText, `${colors.bold}${accent}${titleText}${colors.reset}`)
-    .replace(`| ${statusText}`, `${colors.dim}|${colors.reset} ${statusColor}${statusText}${colors.reset}`)
-    .replace(`| ${activeText}`, `${colors.dim}|${colors.reset} ${isActive ? colors.white : colors.gray}${activeText}${colors.reset}`)
-    .replace(`| ${scrollText}`, `${colors.dim}|${colors.reset} ${colors.gray}${scrollText}${colors.reset}`)
+    .replace(
+      `| ${statusText}`,
+      `${colors.dim}|${colors.reset} ${statusColor}${statusText}${colors.reset}`
+    )
+    .replace(
+      `| ${activeText}`,
+      `${colors.dim}|${colors.reset} ${isActive ? colors.white : colors.gray}${activeText}${colors.reset}`
+    )
+    .replace(
+      `| ${scrollText}`,
+      `${colors.dim}|${colors.reset} ${colors.gray}${scrollText}${colors.reset}`
+    )
   const bottomBorder = `${borderColor}${makeBorder(width)}${colors.reset}`
-  const content = viewport.visible.map(line => {
-    const side = isActive ? `${colors.bold}${colors.white}|${colors.reset}` : '|'
+  const content = viewport.visible.map((line) => {
+    const side = isActive
+      ? `${colors.bold}${colors.white}|${colors.reset}`
+      : '|'
     return `${side}${formatContentLine(line, contentWidth)}${side}`
   })
 
-  return [
-    `${borderColor}${topBorder}${colors.reset}`,
-    ...content,
-    bottomBorder,
-  ]
+  return [`${borderColor}${topBorder}${colors.reset}`, ...content, bottomBorder]
 }
 
 // --- RENDER ---
@@ -374,7 +384,10 @@ function renderFullscreen(totalWidth, totalHeight) {
   const paneWidth = Math.max(totalWidth, MIN_PANE_WIDTH)
   const paneHeight = Math.max(totalHeight - 3, 3)
   const pane = panes[fullscreenPaneKey]
-  return getPaneOutput(pane, paneWidth, paneHeight).slice(0, Math.max(totalHeight - 2, 0))
+  return getPaneOutput(pane, paneWidth, paneHeight).slice(
+    0,
+    Math.max(totalHeight - 2, 0)
+  )
 }
 
 function renderNow() {
@@ -399,7 +412,7 @@ function renderNow() {
         ? renderStacked(totalWidth, totalHeight)
         : renderColumns(totalWidth, totalHeight)
 
-  rows.forEach(line => {
+  rows.forEach((line) => {
     process.stdout.write(`${line}\n`)
   })
 
@@ -423,7 +436,7 @@ function scheduleRender() {
 // --- PROCESS LIFECYCLE ---
 
 function getRunningProcessCount() {
-  return processes.filter(child => child.exitCode === null).length
+  return processes.filter((child) => child.exitCode === null).length
 }
 
 function finalizeAndExit() {
@@ -460,7 +473,7 @@ function spawnProcess(name, relativeDir) {
     stdio: ['inherit', 'pipe', 'pipe'],
   })
 
-  child.stdout.on('data', chunk => {
+  child.stdout.on('data', (chunk) => {
     if (isInteractive) {
       consumeStream(pane, 'partialStdout', 'out', chunk)
       return
@@ -469,7 +482,7 @@ function spawnProcess(name, relativeDir) {
     fallbackWrite(name, 'out', chunk)
   })
 
-  child.stderr.on('data', chunk => {
+  child.stderr.on('data', (chunk) => {
     if (isInteractive) {
       consumeStream(pane, 'partialStderr', 'err', chunk)
       return
@@ -624,7 +637,7 @@ function shutdown() {
 
   process.exitCode = process.exitCode || 0
 
-  processes.forEach(child => {
+  processes.forEach((child) => {
     if (child.exitCode === null && !child.killed) {
       child.kill('SIGTERM')
     }
@@ -637,8 +650,7 @@ function shutdown() {
 
 function printStartupBanner() {
   startTime = new Date()
-  const message =
-    `blogapp dev launcher v1.0.0 starting at ${startTime.toLocaleTimeString()}`
+  const message = `blogapp dev launcher v1.0.0 starting at ${startTime.toLocaleTimeString()}`
 
   process.stdout.write(`${message}\n`)
   process.stdout.write('Entering interactive log view...\n')

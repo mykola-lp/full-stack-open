@@ -9,7 +9,7 @@ usersRouter.get('/', async (request, response) => {
     title: 1,
     author: 1,
     url: 1,
-    id: 1
+    id: 1,
   })
   response.json(users)
 })
@@ -19,7 +19,7 @@ usersRouter.post('/', async (request, response) => {
 
   if (!password || password.length < 3) {
     return response.status(400).json({
-      error: 'Password is required and its minimum length is 3 characters'
+      error: 'Password is required and its minimum length is 3 characters',
     })
   }
 
@@ -29,7 +29,7 @@ usersRouter.post('/', async (request, response) => {
   const user = new User({
     username,
     name,
-    passwordHash
+    passwordHash,
   })
 
   const savedUser = await user.save()

@@ -13,10 +13,14 @@ const createBlog = async (page, blog) => {
   await page.getByLabel('author').fill(blog.author)
   await page.getByLabel('url').fill(blog.url)
   await page.getByRole('button', { name: 'create' }).click()
-  const successDiv = page.getByText(`a new blog ${blog.title} by ${blog.author} added`)
+  const successDiv = page.getByText(
+    `a new blog ${blog.title} by ${blog.author} added`
+  )
   await expect(successDiv).toBeVisible()
   await expect(successDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
-  await expect(page.getByRole('link', { name: `${blog.title} by ${blog.author}` })).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: `${blog.title} by ${blog.author}` })
+  ).toBeVisible()
 }
 
 const likeTimes = async (page, button, n) => {

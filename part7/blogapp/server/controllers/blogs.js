@@ -7,7 +7,7 @@ const { userExtractor } = require('../utils/middleware')
 blogsRouter.get('/', (request, response) => {
   Blog.find({})
     .populate('user', { username: 1, name: 1, id: 1 })
-    .then(blogs => {
+    .then((blogs) => {
       response.json(blogs)
     })
 })
@@ -30,7 +30,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   const populatedBlog = await savedBlog.populate('user', {
     username: 1,
     name: 1,
-    id: 1
+    id: 1,
   })
 
   response.status(201).json(populatedBlog)
@@ -48,7 +48,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
     return response.status(403).json({ error: 'user not authorized' })
   }
 
-  user.blogs = user.blogs.filter(b => b.id.toString() !== blog.id.toString())
+  user.blogs = user.blogs.filter((b) => b.id.toString() !== blog.id.toString())
 
   await blog.deleteOne()
   response.status(204).end()
@@ -72,7 +72,7 @@ blogsRouter.put('/:id', async (request, response) => {
   const populatedBlog = await updatedBlog.populate('user', {
     username: 1,
     name: 1,
-    id: 1
+    id: 1,
   })
 
   response.json(populatedBlog)

@@ -47,9 +47,7 @@ class ErrorBoundary extends React.Component {
 
             <Button
               variant="contained"
-              onClick={() =>
-                this.setState({ hasError: false, error: null })
-              }
+              onClick={() => this.setState({ hasError: false, error: null })}
             >
               Try again
             </Button>

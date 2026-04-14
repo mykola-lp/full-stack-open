@@ -13,7 +13,7 @@ const io = new Server(server, {
   },
 })
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   logger.info(`Socket connected: ${socket.id}`)
 
   socket.emit('server:ready', {

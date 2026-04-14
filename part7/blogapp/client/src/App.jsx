@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import {
-  Routes, Route, Link, useMatch, useNavigate
-} from 'react-router-dom'
+import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
 
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
@@ -27,7 +25,7 @@ const App = () => {
   const navigation = useNavigate()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs))
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -41,7 +39,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const handleServerReady = payload => {
+    const handleServerReady = (payload) => {
       console.log('Socket event received:', payload)
     }
 
@@ -59,7 +57,7 @@ const App = () => {
     }, 25000)
   }
 
-  const addBlog = async blogObject => {
+  const addBlog = async (blogObject) => {
     try {
       const createdBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(createdBlog))
@@ -72,20 +70,20 @@ const App = () => {
     }
   }
 
-  const addLike = async blog => {
+  const addLike = async (blog) => {
     const newBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
     try {
       const updatedBlog = await blogService.update(newBlog)
-      setBlogs(blogs.map(b => (b.id === blog.id ? updatedBlog : b)))
+      setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)))
     } catch (error) {
       console.log('Error while trying to like a blog:', error)
     }
   }
 
-  const removeBlog = async blog => {
+  const removeBlog = async (blog) => {
     try {
       await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      setBlogs(blogs.filter((b) => b.id !== blog.id))
       notifyWith(`Blog ${blog.title} by ${blog.author} removed`)
       navigation('/')
     } catch (error) {
@@ -114,9 +112,7 @@ const App = () => {
   }
 
   const match = useMatch('/blogs/:id')
-  const blog = match
-    ? blogs.find(b => b.id === match.params.id)
-    : null
+  const blog = match ? blogs.find((b) => b.id === match.params.id) : null
 
   return (
     <Container>
@@ -125,14 +121,42 @@ const App = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Blog App
           </Typography>
-          <Button color="inherit" component={Link} to="/" sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>blogs</Button>
-          {!user
-            ? <Button color="inherit" component={Link} to="/login" sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>login</Button>
-            : <>
-              <Button color="inherit" component={Link} to="/create" sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>new blog</Button>
-              <Button color="inherit" onClick={handleLogout} sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}>logout</Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+          >
+            blogs
+          </Button>
+          {!user ? (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/login"
+              sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+            >
+              login
+            </Button>
+          ) : (
+            <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/create"
+                sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+              >
+                new blog
+              </Button>
+              <Button
+                color="inherit"
+                onClick={handleLogout}
+                sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+              >
+                logout
+              </Button>
             </>
-          }
+          )}
         </Toolbar>
       </AppBar>
 
@@ -140,26 +164,21 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={
-            <BlogList blogs={blogs} />
-          } />
-          <Route path="/blogs/:id" element={
-            <Blog
-              blog={blog}
-              addLike={addLike}
-              currentUser={user}
-              removeBlog={removeBlog}
-            />
-          } />
-          <Route path="/login" element={
-            <Login doLogin={doLogin} />
-          } />
-          <Route path="/create" element={
-            <BlogForm createBlog={addBlog} />
-          } />
-          <Route path="*" element={
-            <NotFound />
-          } />
+          <Route path="/" element={<BlogList blogs={blogs} />} />
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                blog={blog}
+                addLike={addLike}
+                currentUser={user}
+                removeBlog={removeBlog}
+              />
+            }
+          />
+          <Route path="/login" element={<Login doLogin={doLogin} />} />
+          <Route path="/create" element={<BlogForm createBlog={addBlog} />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </Container>

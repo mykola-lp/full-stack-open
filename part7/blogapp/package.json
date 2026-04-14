@@ -2,7 +2,6 @@
   "name": "blogapp",
   "private": true,
   "version": "1.0.0",
-
   "_comment": [
     "Recommended root scripts:",
     "npm run build — builds frontend",
@@ -27,9 +26,12 @@
     "start": "npm --prefix server start",
     "start:prod": "npm run build && npm run start",
     "test:server": "npm --prefix server test",
-    "test:client": "npm --prefix client test"
+    "test:client": "npm --prefix client test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "prettier": "^3.8.2"
   }
 }

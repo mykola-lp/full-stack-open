@@ -37,10 +37,7 @@ const NotFound = () => {
           The page you are looking for does not exist or has been moved.
         </Typography>
 
-        <Button
-          variant="contained"
-          onClick={() => navigate('/')}
-        >
+        <Button variant="contained" onClick={() => navigate('/')}>
           Go home
         </Button>
       </Paper>

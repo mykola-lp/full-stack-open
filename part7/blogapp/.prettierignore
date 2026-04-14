@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+coverage
+build
+.vscode
+package-lock.json
+client/package-lock.json
+server/package-lock.json
+e2e-tests-playwright/package-lock.json
