@@ -7,6 +7,7 @@ import {
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
 import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './components/NotFound'
 
 import BlogList from './components/BlogList'
 import Login from './components/Login'
@@ -155,6 +156,9 @@ const App = () => {
           } />
           <Route path="/create" element={
             <BlogForm createBlog={addBlog} />
+          } />
+          <Route path="*" element={
+            <NotFound />
           } />
         </Routes>
       </ErrorBoundary>
