@@ -6,6 +6,8 @@ import {
 
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
+import ErrorBoundary from './components/ErrorBoundary'
+
 import BlogList from './components/BlogList'
 import Login from './components/Login'
 import blogService from './services/blogs'
@@ -135,25 +137,27 @@ const App = () => {
 
       <Notification notification={notification} />
 
-      <Routes>
-        <Route path="/" element={
-          <BlogList blogs={blogs} />
-        } />
-        <Route path="/blogs/:id" element={
-          <Blog
-            blog={blog}
-            addLike={addLike}
-            currentUser={user}
-            removeBlog={removeBlog}
-          />
-        } />
-        <Route path="/login" element={
-          <Login doLogin={doLogin} />
-        } />
-        <Route path="/create" element={
-          <BlogForm createBlog={addBlog} />
-        } />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={
+            <BlogList blogs={blogs} />
+          } />
+          <Route path="/blogs/:id" element={
+            <Blog
+              blog={blog}
+              addLike={addLike}
+              currentUser={user}
+              removeBlog={removeBlog}
+            />
+          } />
+          <Route path="/login" element={
+            <Login doLogin={doLogin} />
+          } />
+          <Route path="/create" element={
+            <BlogForm createBlog={addBlog} />
+          } />
+        </Routes>
+      </ErrorBoundary>
     </Container>
   )
 }
