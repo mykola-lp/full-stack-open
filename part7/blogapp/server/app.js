@@ -2,13 +2,12 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 
-const blogsRouter = require('./controllers/blogs')
-const loginRouter = require('./controllers/login')
-const testingRouter = require('./controllers/testing')
-const usersRouter = require('./controllers/users')
-
-const config = require('./utils/config')
-const middleware = require('./utils/middleware')
+const config = require('./config')
+const middleware = require('./middleware')
+const authModule = require('./modules/auth')
+const blogsModule = require('./modules/blogs')
+const testingModule = require('./modules/testing')
+const usersModule = require('./modules/users')
 
 const app = express()
 
@@ -19,12 +18,12 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
-app.use('/api/blogs', blogsRouter)
-app.use('/api/login', loginRouter)
-app.use('/api/users', usersRouter)
+app.use('/api/blogs', blogsModule.router)
+app.use('/api/login', authModule.router)
+app.use('/api/users', usersModule.router)
 
 if (config.IS_TEST) {
-  app.use('/api/testing', testingRouter)
+  app.use('/api/testing', testingModule.router)
 }
 
 if (config.IS_PRODUCTION) {

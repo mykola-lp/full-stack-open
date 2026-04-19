@@ -5,10 +5,10 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 
 const app = require('../app')
+const { model: Blog } = require('../modules/blogs')
+const { model: User } = require('../modules/users')
 
 const helper = require('./test_helper')
-const Blog = require('../models/blog')
-const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -147,7 +147,7 @@ describe('when there are initially some blogs saved', () => {
 
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
-      blogsAtStart = await helper.blogsInDb()
+      const blogsAtStart = await helper.blogsInDb()
       const blogToDelete = blogsAtStart[0]
 
       await api

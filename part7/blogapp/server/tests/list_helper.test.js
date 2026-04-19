@@ -2,7 +2,7 @@ const assert = require('node:assert')
 
 const { test, describe } = require('node:test')
 
-const listHelper = require('../utils/list_helper')
+const listHelper = require('../shared/utils/listHelper')
 
 const blogs = [
   {

@@ -3,8 +3,8 @@ dist
 dist-ssr
 coverage
 build
+playwright-report
+test-results
+blob-report
 .vscode
 package-lock.json
-client/package-lock.json
-server/package-lock.json
-e2e-tests-playwright/package-lock.json

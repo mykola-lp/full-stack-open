@@ -6,8 +6,8 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
+const { model: User } = require('../modules/users')
 const helper = require('./test_helper')
-const User = require('../models/user')
 
 const api = supertest(app)
 
