@@ -14,10 +14,8 @@ import {
 import ErrorBoundary from './shared/components/ErrorBoundary'
 import NotFound from './shared/components/NotFound'
 import Notification from './shared/components/Notification'
-import { useCurrentUser } from './features/auth/state'
-import { initializeAuth, logout } from './features/auth/services/authService'
-import { fetchBlogs } from './features/blogs/services/blogService'
-import { useNotification } from './shared/state'
+import { useAuth } from './features/auth/context/AuthContext'
+import { useNotificationContext } from './shared/context/NotificationContext'
 import socket from './shared/lib/socket'
 
 const HomeRoute = lazy(() => import('./routes/HomeRoute'))
@@ -28,14 +26,9 @@ const UserRoute = lazy(() => import('./routes/UserRoute'))
 const UserDetailRoute = lazy(() => import('./routes/UserDetailRoute'))
 
 const App = () => {
-  const user = useCurrentUser()
-  const notification = useNotification()
+  const { logout, user } = useAuth()
+  const { notification } = useNotificationContext()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    fetchBlogs()
-    initializeAuth()
-  }, [fetchBlogs, initializeAuth])
 
   useEffect(() => {
     const handleServerReady = (payload) => {

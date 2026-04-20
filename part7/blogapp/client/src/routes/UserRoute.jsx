@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Paper,
@@ -11,14 +10,10 @@ import {
   TableRow,
 } from '@mui/material'
 
-import { getUsers } from '../features/users/services/usersService'
+import { useUsersQuery } from '../features/users/hooks/useUsersQuery'
 
 const UserRoute = () => {
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    getUsers().then(setUsers)
-  }, [])
+  const { data: users = [] } = useUsersQuery()
 
   return (
     <Paper sx={{ mt: 3, p: 3 }}>

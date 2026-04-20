@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 
+import { useAuth } from '../features/auth/context/AuthContext'
 import LoginForm from '../features/auth/components/LoginForm'
-import { login } from '../features/auth/services/authService'
 
 const LoginRoute = () => {
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleLogin = async (credentials) => {
     const success = await login(credentials)

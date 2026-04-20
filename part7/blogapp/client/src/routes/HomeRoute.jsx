@@ -1,8 +1,8 @@
 import BlogList from '../features/blogs/components/BlogList'
-import { useBlogs } from '../features/blogs/state'
+import { useBlogsQuery } from '../features/blogs/hooks/useBlogsQuery'
 
 const HomeRoute = () => {
-  const blogs = useBlogs()
+  const { data: blogs = [] } = useBlogsQuery()
 
   return <BlogList blogs={blogs} />
 }

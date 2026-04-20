@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   List,
@@ -9,17 +8,13 @@ import {
 } from '@mui/material'
 
 import NotFound from '../shared/components/NotFound'
-import { getUserById } from '../features/users/services/usersService'
+import { useUserById } from '../features/users/hooks/useUsersQuery'
 
 const UserDetailRoute = () => {
   const { id } = useParams()
-  const [user, setUser] = useState(undefined)
+  const { isLoading, user } = useUserById(id)
 
-  useEffect(() => {
-    getUserById(id).then(setUser)
-  }, [id])
-
-  if (user === undefined) {
+  if (isLoading) {
     return null
   }
 

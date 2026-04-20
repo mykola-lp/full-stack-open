@@ -220,3 +220,36 @@ Extend your application so that users can add comments to blog posts from the fr
 Improve the visual appearance of the new features of your application using the techniques covered in part 5.
 
 This was the last exercise for this part of the course and it's time to push your code to GitHub and mark all of your completed exercises to the exercise submission system.
+
+---
+
+## Architecture Evolution
+
+During this part of the course, the application was implemented using multiple state management approaches to better understand their trade-offs.
+
+### 1. Zustand (initial implementation)
+
+The first version of the application uses Zustand for global state management:
+
+* Centralized stores for blogs, authentication, and notifications
+* Minimal boilerplate and direct state mutations
+* Good developer experience for smaller-scale applications
+
+### 2. React Query + Context (refactored version)
+
+In a separate commit, the application was refactored to use:
+
+* React Query for server state management
+* React Context for client-side state (e.g., authentication, notifications)
+
+This approach provides:
+
+* Better separation between server state and UI state
+* Built-in caching, synchronization, and background updates
+* More scalable data-fetching patterns
+
+---
+
+### Notes
+
+Each approach is implemented in separate commits, with commit message prefixes (e.g., [Zustand], [React Query and Context]) to clearly demonstrate the differences between the solutions.

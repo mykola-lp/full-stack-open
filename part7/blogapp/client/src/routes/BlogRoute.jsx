@@ -1,33 +1,52 @@
 import { useNavigate, useParams } from 'react-router-dom'
 
 import BlogCard from '../features/blogs/components/BlogCard'
-import { useCurrentUser } from '../features/auth/state'
+import { useAuth } from '../features/auth/context/AuthContext'
 import {
-  addComment,
-  likeBlog,
-  removeBlog,
-} from '../features/blogs/services/blogService'
-import { useBlogById } from '../features/blogs/state'
+  useAddCommentMutation,
+  useBlogById,
+  useLikeBlogMutation,
+  useRemoveBlogMutation,
+} from '../features/blogs/hooks/useBlogsQuery'
 
 const BlogRoute = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const user = useCurrentUser()
-  const blog = useBlogById(id)
+  const { user } = useAuth()
+  const { blog } = useBlogById(id)
+  const likeBlogMutation = useLikeBlogMutation()
+  const addCommentMutation = useAddCommentMutation()
+  const removeBlogMutation = useRemoveBlogMutation()
 
   const handleRemove = async (blogToRemove) => {
-    const removed = await removeBlog(blogToRemove)
+    await removeBlogMutation.mutateAsync(blogToRemove)
+    navigate('/')
+  }
 
-    if (removed) {
-      navigate('/')
+  const handleLike = async (blogToLike) => {
+    const updatedBlog = await likeBlogMutation.mutateAsync(blogToLike)
+
+    if (updatedBlog) {
+      return updatedBlog
+    }
+  }
+
+  const handleAddComment = async (blogToComment, comment) => {
+    const updatedBlog = await addCommentMutation.mutateAsync({
+      blog: blogToComment,
+      comment,
+    })
+
+    if (updatedBlog) {
+      return updatedBlog
     }
   }
 
   return (
     <BlogCard
       blog={blog}
-      addLike={likeBlog}
-      addComment={addComment}
+      addLike={handleLike}
+      addComment={handleAddComment}
       currentUser={user}
       removeBlog={handleRemove}
     />
