@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 
 import BlogCard from '../features/blogs/components/BlogCard'
-import { useAuth } from '../features/auth/context/AuthContext'
+import { useAuth } from '../features/auth/hooks/useAuth'
 import {
   useAddCommentMutation,
   useBlogById,

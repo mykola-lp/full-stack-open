@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { useAuth } from '../features/auth/context/AuthContext'
+import { useAuth } from '../features/auth/hooks/useAuth'
 import LoginForm from '../features/auth/components/LoginForm'
 
 const LoginRoute = () => {

@@ -248,8 +248,30 @@ This approach provides:
 * Built-in caching, synchronization, and background updates
 * More scalable data-fetching patterns
 
+### 3. Redux Toolkit (structured global state approach)
+
+In a separate commit, the application was refactored to use Redux Toolkit (RTK) for global state management:
+
+* Centralized state management using **Redux slices**
+* Standardized structure with `createSlice`, `configureStore`, and actions
+* Built-in support for immutable updates via Immer
+* Optional integration with middleware (e.g., async thunks for side effects)
+
+This approach provides:
+
+* More predictable and explicit state flow compared to Zustand
+* Strong architectural conventions for medium and large-scale applications
+* Better tooling support (Redux DevTools, action tracing, debugging)
+* Clear separation between state logic (reducers) and UI components
+
+**Trade-offs:**
+
+* More boilerplate compared to Zustand
+* Higher initial setup complexity
+* Overhead may be unnecessary for small applications
+
 ---
 
 ### Notes
 
-Each approach is implemented in separate commits, with commit message prefixes (e.g., [Zustand], [React Query and Context]) to clearly demonstrate the differences between the solutions.
+Each approach is implemented in separate commits, with commit message prefixes (e.g. `[Zustand]`, `[React Query and Context]`, `[Redux Toolkit]`) to clearly demonstrate the differences between the solutions.

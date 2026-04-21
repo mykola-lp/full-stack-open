@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useDispatch } from 'react-redux'
 
 import blogsApi from '../api/blogsApi'
-import { useNotificationContext } from '../../../shared/context/NotificationContext'
+import { showNotification } from '../../notification/notificationSlice'
 
 const BLOGS_QUERY_KEY = ['blogs']
 
@@ -30,20 +31,22 @@ export const useBlogById = (id) => {
 
 export const useCreateBlogMutation = () => {
   const queryClient = useQueryClient()
-  const { showNotification } = useNotificationContext()
+  const dispatch = useDispatch()
 
   return useMutation({
     mutationFn: blogsApi.create,
     onError: (error) => {
-      showNotification('creating new blog failed', true)
+      dispatch(showNotification('creating new blog failed', true))
       console.error('Creating new blog failed:', error)
     },
     onSuccess: (createdBlog) => {
       queryClient.setQueryData(BLOGS_QUERY_KEY, (blogs = []) =>
         sortBlogsByLikes(blogs.concat(createdBlog))
       )
-      showNotification(
-        `a new blog ${createdBlog.title} by ${createdBlog.author} added`
+      dispatch(
+        showNotification(
+          `a new blog ${createdBlog.title} by ${createdBlog.author} added`
+        )
       )
     },
   })
@@ -51,7 +54,7 @@ export const useCreateBlogMutation = () => {
 
 export const useLikeBlogMutation = () => {
   const queryClient = useQueryClient()
-  const { showNotification } = useNotificationContext()
+  const dispatch = useDispatch()
 
   return useMutation({
     mutationFn: (blog) =>
@@ -61,7 +64,7 @@ export const useLikeBlogMutation = () => {
         user: blog.user.id,
       }),
     onError: (error) => {
-      showNotification('failed to update likes', true)
+      dispatch(showNotification('failed to update likes', true))
       console.error('Error while trying to like a blog:', error)
     },
     onSuccess: (updatedBlog) => {
@@ -74,12 +77,12 @@ export const useLikeBlogMutation = () => {
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient()
-  const { showNotification } = useNotificationContext()
+  const dispatch = useDispatch()
 
   return useMutation({
     mutationFn: ({ blog, comment }) => blogsApi.addComment(blog.id, comment),
     onError: (error) => {
-      showNotification('failed to add comment', true)
+      dispatch(showNotification('failed to add comment', true))
       console.error('Error while trying to add a comment:', error)
     },
     onSuccess: (updatedBlog) => {
@@ -92,7 +95,7 @@ export const useAddCommentMutation = () => {
 
 export const useRemoveBlogMutation = () => {
   const queryClient = useQueryClient()
-  const { showNotification } = useNotificationContext()
+  const dispatch = useDispatch()
 
   return useMutation({
     mutationFn: async (blog) => {
@@ -100,14 +103,18 @@ export const useRemoveBlogMutation = () => {
       return blog
     },
     onError: (error) => {
-      showNotification('failed to delete blog', true)
+      dispatch(showNotification('failed to delete blog', true))
       console.error('Error while trying to delete a blog:', error)
     },
     onSuccess: (deletedBlog) => {
       queryClient.setQueryData(BLOGS_QUERY_KEY, (blogs = []) =>
         blogs.filter((blog) => blog.id !== deletedBlog.id)
       )
-      showNotification(`Blog ${deletedBlog.title} by ${deletedBlog.author} removed`)
+      dispatch(
+        showNotification(
+          `Blog ${deletedBlog.title} by ${deletedBlog.author} removed`
+        )
+      )
     },
   })
 }

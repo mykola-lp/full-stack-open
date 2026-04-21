@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 
 import {
@@ -14,8 +15,7 @@ import {
 import ErrorBoundary from './shared/components/ErrorBoundary'
 import NotFound from './shared/components/NotFound'
 import Notification from './shared/components/Notification'
-import { useAuth } from './features/auth/context/AuthContext'
-import { useNotificationContext } from './shared/context/NotificationContext'
+import { useAuth } from './features/auth/hooks/useAuth'
 import socket from './shared/lib/socket'
 
 const HomeRoute = lazy(() => import('./routes/HomeRoute'))
@@ -27,7 +27,7 @@ const UserDetailRoute = lazy(() => import('./routes/UserDetailRoute'))
 
 const App = () => {
   const { logout, user } = useAuth()
-  const { notification } = useNotificationContext()
+  const notification = useSelector((state) => state.notification)
   const navigate = useNavigate()
 
   useEffect(() => {
