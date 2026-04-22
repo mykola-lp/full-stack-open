@@ -278,3 +278,110 @@ If the author is not in the system, null is returned:
   }
 }
 ```
+---
+
+## Exercises 8.13.-8.16
+
+The following exercises are quite likely to break your frontend. Do not worry about it yet; the frontend shall be fixed and expanded in the next chapter.
+
+---
+
+### 8.13: Database, part 1
+
+Refactor the library application code into multiple files in the same way as at the beginning of this chapter. Proceed in small steps and keep the application working at all times. You can, for example, use the frontend to verify that all features still work after the refactoring.
+
+Then modify the application so that it stores the data in a database. You can find the mongoose schema for books and authors from here ([https://github.com/fullstack-hy2020/misc/blob/master/library-schema.md](https://github.com/fullstack-hy2020/misc/blob/master/library-schema.md)).
+
+Let's change the book graphql schema a little
+
+```graphql
+type Book {
+  title: String!
+  published: Int!
+
+  author: Author!
+  genres: [String!]!
+  id: ID!
+}
+```
+
+so that instead of just the author's name, the book object contains all the details of the author.
+
+You can assume that the user will not try to add faulty books or authors, so you don't have to care about validation errors.
+
+The following things do not have to work just yet:
+
+* allBooks query with parameters
+* bookCount field of an author object
+* author field of a book
+* editAuthor mutation
+
+Note: despite the fact that author is now an object within a book, the schema for adding a book can remain same, only the name of the author is given as a parameter
+
+```graphql
+type Mutation {
+  addBook(
+    title: String!
+    author: String!
+    published: Int!
+    genres: [String!]!
+  ): Book!
+  editAuthor(name: String!, setBornTo: Int!): Author
+}
+```
+
+---
+
+### 8.14: Database, part 2
+
+Complete the program so that all queries (to get allBooks working with the parameter author and bookCount field of an author object is not required) and mutations work.
+
+Regarding the genre parameter of the all books query, the situation is a bit more challenging. The solution is simple, but finding it can be a headache. You might benefit from this ([https://www.mongodb.com/docs/manual/tutorial/query-arrays/](https://www.mongodb.com/docs/manual/tutorial/query-arrays/)).
+
+---
+
+### 8.15 Database, part 3
+
+Complete the program so that database validation errors (e.g. book title or author name being too short) are handled sensibly. This means that they cause GraphQLError ([https://www.apollographql.com/docs/apollo-server/data/errors#custom-errors](https://www.apollographql.com/docs/apollo-server/data/errors#custom-errors)) with a suitable error message to be thrown.
+
+---
+
+### 8.16 user and logging in
+
+Add user management to your application. Expand the schema like so:
+
+```graphql
+type User {
+  username: String!
+  favoriteGenre: String!
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
+type Query {
+  // ..
+  me: User
+}
+
+type Mutation {
+  // ...
+  createUser(
+    username: String!
+    favoriteGenre: String!
+  ): User
+
+  login(
+    username: String!
+    password: String!
+  ): Token
+}
+```
+
+Create resolvers for query me and the new mutations createUser and login. Like in the course material, you can assume all users have the same hardcoded password.
+
+Make the mutations addBook and editAuthor possible only if the request includes a valid token.
+
+(Don't worry about fixing the frontend for the moment.)

@@ -1,4 +1,5 @@
-// Exercises 8.1.-8.
+# Exercises 8.1.-8.7
+
 query {
   bookCount
   authorCount
@@ -52,5 +53,112 @@ mutation {
   editAuthor(name: "Reijo Mäki", setBornTo: 1958) {
     name
     born
+  }
+}
+
+
+# Exercises 8.13.-8.16
+
+// create user
+mutation {
+  createUser(
+    username: "alex"
+    favoriteGenre: "refactoring"
+  ) {
+    username
+    favoriteGenre
+    id
+  }
+}
+
+// login
+mutation {
+  login(
+    username: "alex"
+    password: "secret"
+  ) {
+    value
+  }
+}
+
+{
+  "Authorization": "Bearer <TOKEN>"
+}
+
+query {
+  me {
+    username
+    favoriteGenre
+    id
+  }
+}
+
+// with auth
+mutation {
+  addBook(
+    title: "Domain-Driven Design"
+    author: "Eric Evans"
+    published: 2003
+    genres: ["design", "architecture"]
+  ) {
+    title
+    author {
+      name
+    }
+  }
+}
+
+mutation {
+  editAuthor(name: "Eric Evans", setBornTo: 1965) {
+    name
+    born
+    bookCount
+  }
+}
+
+query {
+  allAuthors {
+    name
+    born
+    bookCount
+  }
+}
+
+query {
+  allBooks(author: "Eric Evans", genre: "design") {
+    title
+  }
+}
+
+// no TOKEN
+mutation {
+  addBook(
+    title: "Clean Architecture"
+    author: "Robert Martin"
+    published: 2017
+    genres: ["architecture"]
+  ) {
+    title
+  }
+}
+
+// wrong password
+mutation {
+  login(
+    username: "alex"
+    password: "wrong"
+  ) {
+    value
+  }
+}
+
+mutation {
+  addBook(
+    title: "Test"
+    author: "Abc"
+    published: 2024
+    genres: ["test"]
+  ) {
+    title
   }
 }
