@@ -51,3 +51,66 @@ Make sure that the Authors view is kept up to date after setting a birth year.
 Make the birth year form such that the birth year can be set via a dropdown only for an existing author.
 
 You can use, for example, the select element or a separate library like react-select.
+
+---
+
+## Exercises 8.17–8.22
+
+Through these exercises, we'll continue implementing and extending the frontend for the GraphQL library.
+
+---
+
+### 8.17: Listing books
+
+After backend changes, the list of books no longer works.
+
+Fix the issue so that books are fetched and displayed correctly again.
+
+---
+
+### 8.18: Log in
+
+Adding new books and editing an author's birth year require authentication.
+
+Implement login functionality and fix the related mutations.
+
+Handling validation errors is not required at this stage.
+
+You can design the login UI freely. One possible approach is to create a separate login view accessible via navigation.
+
+When a user logs in, the navigation should update to display features available only to authenticated users.
+
+---
+
+### 8.19: Books by genre (Part 1)
+
+Extend the application to allow filtering books by genre.
+
+At this stage, the filtering can be implemented purely on the client side using React.
+
+---
+
+### 8.20: Books by genre (Part 2)
+
+Implement a view that displays books based on the logged-in user’s favorite genre.
+
+---
+
+### 8.21: Books by genre with GraphQL
+
+Refactor the genre filtering (from exercise 8.19) to be handled via a GraphQL query instead of client-side filtering.
+
+If you already implemented it this way earlier, no further changes are needed.
+
+---
+
+### 8.22: Up-to-date cache and book recommendations
+
+Ensure that the books view stays reasonably up to date when new books are added.
+
+When using genre-based queries:
+
+* the view should update at least when a genre is reselected
+* automatic updates without interaction are not required
+
+These exercises are more challenging and may benefit from completing later sections first.

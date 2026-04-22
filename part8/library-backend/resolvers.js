@@ -1,9 +1,55 @@
 const { GraphQLError } = require('graphql')
+const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+
+const SALT_LENGTH = 16
+const KEY_LENGTH = 64
+const SCRYPT_COST = 16384
+const MIN_PASSWORD_LENGTH = 6
+
+const scrypt = (value, salt) =>
+  new Promise((resolve, reject) => {
+    crypto.scrypt(value, salt, KEY_LENGTH, { N: SCRYPT_COST }, (error, derivedKey) => {
+      if (error) {
+        reject(error)
+        return
+      }
+
+      resolve(derivedKey)
+    })
+  })
+
+const hashPassword = async (password) => {
+  const salt = crypto.randomBytes(SALT_LENGTH).toString('hex')
+  const derivedKey = await scrypt(password, salt)
+
+  return `${salt}:${derivedKey.toString('hex')}`
+}
+
+const verifyPassword = async (password, passwordHash) => {
+  if (!passwordHash) {
+    return false
+  }
+
+  const [salt, storedKey] = passwordHash.split(':')
+
+  if (!salt || !storedKey) {
+    return false
+  }
+
+  const derivedKey = await scrypt(password, salt)
+  const storedKeyBuffer = Buffer.from(storedKey, 'hex')
+
+  if (storedKeyBuffer.length !== derivedKey.length) {
+    return false
+  }
+
+  return crypto.timingSafeEqual(storedKeyBuffer, derivedKey)
+}
 
 const requireAuth = (currentUser) => {
   if (!currentUser) {
@@ -116,9 +162,24 @@ const resolvers = {
     },
 
     createUser: async (root, args) => {
+      if (args.password.length < MIN_PASSWORD_LENGTH) {
+        throw new GraphQLError(
+          `Creating the user failed: password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.password,
+            },
+          }
+        )
+      }
+
+      const passwordHash = await hashPassword(args.password)
+
       const user = new User({
         username: args.username,
         favoriteGenre: args.favoriteGenre,
+        passwordHash,
       })
 
       try {
@@ -138,8 +199,11 @@ const resolvers = {
 
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
+      const passwordCorrect = user
+        ? await verifyPassword(args.password, user.passwordHash)
+        : false
 
-      if (!user || args.password !== 'secret') {
+      if (!user || !passwordCorrect) {
         throw new GraphQLError('wrong credentials', {
           extensions: {
             code: 'BAD_USER_INPUT',

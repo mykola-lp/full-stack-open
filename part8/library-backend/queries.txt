@@ -64,6 +64,7 @@ mutation {
   createUser(
     username: "alex"
     favoriteGenre: "refactoring"
+    password: "secret123"
   ) {
     username
     favoriteGenre
@@ -75,7 +76,7 @@ mutation {
 mutation {
   login(
     username: "alex"
-    password: "secret"
+    password: "secret123"
   ) {
     value
   }
