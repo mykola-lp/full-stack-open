@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useApolloClient } from '@apollo/client/react'
+import { useApolloClient, useSubscription } from '@apollo/client/react'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -7,6 +7,38 @@ import NewBook from './components/NewBook'
 import EditAuthor from './components/EditAuthor'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
+
+const updateBooksCache = (cache, query, variables, addedBook) => {
+  let existingData
+
+  try {
+    existingData = cache.readQuery({
+      query,
+      variables,
+    })
+  } catch {
+    return
+  }
+
+  if (!existingData) {
+    return
+  }
+
+  const alreadyIncluded = existingData.allBooks.some((book) => book.id === addedBook.id)
+
+  if (alreadyIncluded) {
+    return
+  }
+
+  cache.writeQuery({
+    query,
+    variables,
+    data: {
+      allBooks: existingData.allBooks.concat(addedBook),
+    },
+  })
+}
 
 const App = () => {
   const client = useApolloClient()
@@ -20,6 +52,24 @@ const App = () => {
       setErrorMessage(null)
     }, 5000)
   }
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data?.bookAdded
+
+      if (!addedBook) {
+        return
+      }
+
+      updateBooksCache(client.cache, ALL_BOOKS, { genre: null }, addedBook)
+
+      addedBook.genres.forEach((genre) => {
+        updateBooksCache(client.cache, ALL_BOOKS, { genre }, addedBook)
+      })
+
+      window.alert(`New book added: ${addedBook.title} by ${addedBook.author.name}`)
+    },
+  })
 
   const logout = async () => {
     setToken(null)

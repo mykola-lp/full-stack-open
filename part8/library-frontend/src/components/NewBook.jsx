@@ -4,10 +4,16 @@ import { useMutation } from '@apollo/client/react'
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 
 const updateBooksCache = (cache, query, variables, addedBook) => {
-  const existingData = cache.readQuery({
-    query,
-    variables,
-  })
+  let existingData
+
+  try {
+    existingData = cache.readQuery({
+      query,
+      variables,
+    })
+  } catch {
+    return
+  }
 
   if (!existingData) {
     return

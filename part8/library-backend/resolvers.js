@@ -1,5 +1,6 @@
 const { GraphQLError } = require('graphql')
 const crypto = require('crypto')
+const { PubSub } = require('graphql-subscriptions')
 const jwt = require('jsonwebtoken')
 
 const Book = require('./models/book')
@@ -10,6 +11,8 @@ const SALT_LENGTH = 16
 const KEY_LENGTH = 64
 const SCRYPT_COST = 16384
 const MIN_PASSWORD_LENGTH = 6
+const BOOK_ADDED = 'BOOK_ADDED'
+const pubsub = new PubSub()
 
 const scrypt = (value, salt) =>
   new Promise((resolve, reject) => {
@@ -61,6 +64,21 @@ const requireAuth = (currentUser) => {
   }
 }
 
+const getAuthorBookCounts = async () => {
+  const bookCounts = await Book.aggregate([
+    {
+      $group: {
+        _id: '$author',
+        bookCount: { $sum: 1 },
+      },
+    },
+  ])
+
+  return new Map(
+    bookCounts.map((entry) => [String(entry._id), entry.bookCount])
+  )
+}
+
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
@@ -86,9 +104,25 @@ const resolvers = {
       return Book.find(filter).populate('author')
     },
 
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      const [authors, bookCounts] = await Promise.all([
+        Author.find({}),
+        getAuthorBookCounts(),
+      ])
+
+      return authors.map((author) => ({
+        ...author.toObject(),
+        bookCount: bookCounts.get(String(author._id)) || 0,
+      }))
+    },
 
     me: (root, args, { currentUser }) => currentUser,
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator(BOOK_ADDED),
+    },
   },
 
   Mutation: {
@@ -132,7 +166,13 @@ const resolvers = {
         })
       }
 
-      return Book.findById(book._id).populate('author')
+      const populatedBook = await Book.findById(book._id).populate('author')
+
+      await pubsub.publish(BOOK_ADDED, {
+        bookAdded: populatedBook,
+      })
+
+      return populatedBook
     },
 
     editAuthor: async (root, args, { currentUser }) => {
@@ -223,7 +263,13 @@ const resolvers = {
   },
 
   Author: {
-    bookCount: async (root) => Book.countDocuments({ author: root._id }),
+    bookCount: (root) => {
+      if (typeof root.bookCount === 'number') {
+        return root.bookCount
+      }
+
+      return Book.countDocuments({ author: root._id })
+    },
   },
 
   Book: {

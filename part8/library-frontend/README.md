@@ -114,3 +114,56 @@ When using genre-based queries:
 * automatic updates without interaction are not required
 
 These exercises are more challenging and may benefit from completing later sections first.
+
+---
+
+## Exercises 8.23.-8.26
+
+### 8.23: Subscriptions - server
+
+Do a backend implementation for subscription `bookAdded`, which returns the details of all new books to its subscribers.
+
+---
+
+### 8.24: Subscriptions - client, part 1
+
+Start using subscriptions in the client, and subscribe to `bookAdded`.
+
+When new books are added, notify the user. Any method works. For example, you can use the `window.alert` function.
+
+---
+
+### 8.25: Subscriptions - client, part 2
+
+Keep the application's book view updated when the server notifies about new books. You can ignore the author view.
+
+You can test your implementation by opening the app in two browser tabs and adding a new book in one tab. Adding the new book should update the view in both tabs.
+
+---
+
+### 8.26: n+1
+
+Solve the n+1 problem of the following query using any method you like.
+
+```graphql
+query {
+  allAuthors {
+    name
+    bookCount
+  }
+}
+```
+
+---
+
+## Submitting exercises and getting the credits
+
+Exercises of this part are submitted via the submissions system just like in the previous parts, but unlike previous parts, the submission goes to a different course instance.
+
+Remember that you have to finish at least 22 exercises to pass this part.
+
+Once you have completed the exercises and want to get the credits, let us know through the exercise submission system that you have completed the course.
+
+Note that you need a registration to the corresponding course part for getting the credits registered.
+
+You can download the certificate for completing this part by clicking one of the flag icons. The flag icon corresponds to the certificate's language.
